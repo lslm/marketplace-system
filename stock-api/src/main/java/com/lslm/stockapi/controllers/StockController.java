@@ -1,12 +1,15 @@
 package com.lslm.stockapi.controllers;
 
 import com.lslm.stockapi.entities.Stock;
+import com.lslm.stockapi.exceptions.ClientRequestException;
 import com.lslm.stockapi.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,9 +20,13 @@ public class StockController {
     private StockService stockService;
 
     @PostMapping()
-    public ResponseEntity<Stock> create(@RequestBody Stock newStock) {
+    public ResponseEntity<Stock> create(@RequestBody Stock newStock) throws IOException {
         Stock stock = stockService.create(newStock);
-        return new ResponseEntity<>(stock, HttpStatus.CREATED);
+
+        if (stock != null)
+            return new ResponseEntity<>(stock, HttpStatus.CREATED);
+
+        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Stock could not be created");
     }
 
     @GetMapping("/{id}")
