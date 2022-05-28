@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @RolesAllowed("admin")
     @PostMapping()
     public ResponseEntity<Product> create(@RequestBody Product newProduct) {
         Product product = productService.create(newProduct);
