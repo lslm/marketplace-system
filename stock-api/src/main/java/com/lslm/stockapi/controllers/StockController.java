@@ -1,7 +1,7 @@
 package com.lslm.stockapi.controllers;
 
+import com.lslm.stockapi.entities.ProductStock;
 import com.lslm.stockapi.entities.Stock;
-import com.lslm.stockapi.exceptions.ClientRequestException;
 import com.lslm.stockapi.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,5 +39,11 @@ public class StockController {
     public ResponseEntity<List<Stock>> findAll() {
         List<Stock> stocks = stockService.findAll();
         return new ResponseEntity<>(stocks, HttpStatus.OK);
+    }
+
+    @GetMapping("/products/{productId}/available")
+    public ResponseEntity<ProductStock> getByProduct(@PathVariable UUID productId) {
+        ProductStock productStock = stockService.byProduct(productId);
+        return new ResponseEntity<>(productStock, HttpStatus.OK);
     }
 }
