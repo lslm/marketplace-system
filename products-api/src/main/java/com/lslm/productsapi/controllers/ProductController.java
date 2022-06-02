@@ -17,7 +17,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @RolesAllowed("admin")
     @PostMapping()
     public ResponseEntity<Product> create(@RequestBody Product newProduct) {
         Product product = productService.create(newProduct);
