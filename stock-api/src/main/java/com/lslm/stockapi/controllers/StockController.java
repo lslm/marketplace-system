@@ -1,5 +1,8 @@
 package com.lslm.stockapi.controllers;
 
+import com.lslm.stockapi.adapters.StockAdapter;
+import com.lslm.stockapi.adapters.requests.StockCreationRequest;
+import com.lslm.stockapi.adapters.responses.StockCreationResponse;
 import com.lslm.stockapi.entities.ProductStock;
 import com.lslm.stockapi.entities.Stock;
 import com.lslm.stockapi.services.StockService;
@@ -19,12 +22,16 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
-    @PostMapping()
-    public ResponseEntity<Stock> create(@RequestBody Stock newStock) throws IOException {
-        Stock stock = stockService.create(newStock);
+    @Autowired
+    private StockAdapter stockAdapter;
 
-        if (stock != null)
-            return new ResponseEntity<>(stock, HttpStatus.CREATED);
+    @PostMapping()
+    public ResponseEntity<StockCreationResponse> create(@RequestBody StockCreationRequest stockCreationRequest) throws IOException {
+        Stock newStock = stockAdapter.toStock(stockCreationRequest);
+        Stock createdStock = stockService.create(newStock);
+
+        if (createdStock != null)
+            return new ResponseEntity<>(stockAdapter.toStockCreationResponse(createdStock), HttpStatus.CREATED);
 
         throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Stock could not be created");
     }
