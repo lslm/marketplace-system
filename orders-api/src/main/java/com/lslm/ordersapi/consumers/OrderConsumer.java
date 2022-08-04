@@ -33,6 +33,6 @@ public class OrderConsumer {
         Order orderCreated = orderService.create(order, productStock);
 
         if (orderCreated != null)
-            orderProducer.produceCreatedOrder(orderCreated);
+            orderProducer.produceOrderCreated(orderCreated);
     }
 }

@@ -11,19 +11,19 @@ public class OrderProducer {
     @Autowired
     private final AmqpTemplate amqpTemplate;
 
+    Gson gson = new Gson();
+
     public OrderProducer(AmqpTemplate template) {
         amqpTemplate = template;
     }
 
     public void produceCreateOrder(Order order) {
-        Gson gson = new Gson();
         String payload = gson.toJson(order);
         amqpTemplate.convertAndSend("CREATE-ORDER", payload);
     }
 
-    public void produceCreatedOrder(Order order) {
-        Gson gson = new Gson();
+    public void produceOrderCreated(Order order) {
         String payload = gson.toJson(order);
-        amqpTemplate.convertAndSend("ORDER-CREATED", payload);
+        amqpTemplate.convertAndSend("order-exchange", "order-routing-key", payload);
     }
 }
